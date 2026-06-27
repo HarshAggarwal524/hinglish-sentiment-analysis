@@ -66,59 +66,35 @@ Try the model live on HuggingFace Spaces:
 ---
 
 ## Project Structure
+
+```
 hinglish-sentiment-analysis/
-
 ├── data/
-
-│   ├── train_custom.csv          # Clean 85/15 train split
-
-│   ├── dev_custom.csv            # Clean 85/15 dev split
-
-│   ├── emotion_train_final.csv   # Emotion train set (5,083 tweets)
-
-│   ├── emotion_dev_final.csv     # Emotion dev set (897 tweets)
-
-│   └── emotion_merged.csv        # Full emotion dataset (5,980 tweets)
-
+│   ├── train_custom.csv
+│   ├── dev_custom.csv
+│   ├── emotion_train_final.csv
+│   ├── emotion_dev_final.csv
+│   └── emotion_merged.csv
 ├── notebooks/
-
-│   ├── 01_EDA.ipynb              # Exploratory data analysis
-
-│   ├── 02_Baseline.ipynb         # TF-IDF + LR baseline
-
-│   ├── 03_mBERTv2.ipynb          # mBERT sentiment fine-tuning
-
-│   ├── 04_XlmRv2_and_MuRilv2.ipynb  # XLM-R + MuRIL sentiment
-
-│   ├── 06_emotion_relabeling.ipynb   # GPT-4o-mini emotion labeling
-
-│   ├── 07_emotion_label_train.ipynb  # Train set emotion labeling
-
-│   ├── 08_emotion_xlmr.ipynb     # XLM-R emotion fine-tuning
-
-│   ├── 09_emotion_MuRIL.ipynb    # MuRIL emotion fine-tuning
-
-│   ├── 10_ablation_muril.ipynb   # Dataset size ablation
-
-│   └── 11_shap_analysis.ipynb    # SHAP token attribution
-
+│   ├── 01_EDA.ipynb
+│   ├── 02_Baseline.ipynb
+│   ├── 03_mBERTv2.ipynb
+│   ├── 04_XlmRv2_and_MuRilv2.ipynb
+│   ├── 06_emotion_relabeling.ipynb
+│   ├── 07_emotion_label_train.ipynb
+│   ├── 08_emotion_xlmr.ipynb
+│   ├── 09_emotion_MuRIL.ipynb
+│   ├── 10_ablation_muril.ipynb
+│   └── 11_shap_analysis.ipynb
 ├── results/
-
-│   ├── shap_attribution_figure3.png  # Figure 3: attribution bar chart
-
-│   ├── shap_attribution_ratios.csv   # Full attribution results
-
-│   └── muril_ablation_curve.png      # Figure 2: ablation curve
-
+│   ├── shap_attribution_figure3.png
+│   ├── shap_attribution_ratios.csv
+│   └── muril_ablation_curve.png
 ├── demo/
-
-│   ├── app.py                    # Gradio demo app
-
+│   ├── app.py
 │   └── requirements.txt
-
 └── README.md
-
----
+```
 
 ## Setup
 
