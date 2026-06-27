@@ -1,59 +1,188 @@
-# hinglish-sentiment-analysis
-SemEval-2020 Task 9 — Sentiment Analysis for Hinglish code-mixed text
-# Hinglish Sentiment Analysis — SemEval-2020 Task 9
+# Which Language Drives Emotion? Explainable Multilingual Models for Hinglish Emotion Detection
 
-## Research Question
-<!-- TODO: What is the core question this project investigates? -->
-> Placeholder: How can transformer-based models effectively capture sentiment in Hinglish (Hindi-English) code-mixed social media text?
+[![arXiv](https://img.shields.io/badge/arXiv-paper-red)](YOUR_ARXIV_LINK)
+[![HuggingFace Model](https://img.shields.io/badge/🤗-Model-yellow)](https://huggingface.co/Gek524/hinglish-emotion-xlmr)
+[![HuggingFace Demo](https://img.shields.io/badge/🤗-Demo-blue)](https://huggingface.co/spaces/Gek524/hinglish-emotion-detector)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## Dataset
-<!-- TODO: Describe the dataset in detail -->
-- **Source:** SemEval-2020 Task 9 — Sentiment Analysis for Code-Mixed Social Media Text (Hinglish subtask)
-- **Splits:** Train / Dev / Test
-- **Labels:** Positive, Negative, Neutral
-- **Size:** ~TBD examples
+## Overview
 
-## Method
-<!-- TODO: Describe your approach -->
-- Baseline: Placeholder (e.g., TF-IDF + Logistic Regression)
-- Proposed: Placeholder (e.g., MuRIL / XLM-R fine-tuning)
-- Evaluation metric: Weighted F1
+This project investigates **which language's tokens drive emotion classification** in code-mixed Hinglish (Hindi-English) social media text. We fine-tune three multilingual transformer models and apply SHAP-based token attribution analysis to reveal systematic language asymmetry across emotion classes.
+
+**Central Finding:** Anger classification is predominantly driven by Hindi tokens (attribution ratio = 0.527), while joy is the only emotion driven more by English tokens (0.397). This challenges the assumption that multilingual models learn language-neutral representations.
+
+---
+
+## Live Demo
+
+Try the model live on HuggingFace Spaces:
+👉 [hinglish-emotion-detector](https://huggingface.co/spaces/Gek524/hinglish-emotion-detector)
+
+---
 
 ## Results
-<!-- TODO: Fill after experiments -->
-| Model | Weighted F1 |
-|-------|-------------|
-| Baseline | — |
-| Proposed | — |
 
-## Repo Structure
+### Sentiment Classification (3-class)
 
-├── data/           # Raw & processed datasets
+| Model | Macro F1 | Neg F1 | Neu F1 | Pos F1 |
+|-------|----------|--------|--------|--------|
+| TF-IDF + LR | 0.592 | 0.63 | 0.51 | 0.64 |
+| mBERT | 0.614 | 0.63 | 0.56 | 0.65 |
+| XLM-R | 0.644 | 0.66 | 0.57 | 0.70 |
+| MuRIL | 0.641 | 0.64 | 0.57 | 0.71 |
 
-├── notebooks/      # EDA and experiments
+### Emotion Classification (4-class)
 
-├── src/            # Source code
+| Model | Macro F1 | Anger F1 | Joy F1 | Sadness F1 | Trust F1 |
+|-------|----------|----------|--------|------------|----------|
+| XLM-R | **0.681** | 0.85 | 0.86 | 0.49 | 0.52 |
+| MuRIL | 0.611 | 0.85 | 0.82 | 0.32 | 0.45 |
 
-├── results/        # Outputs and logs
+### SHAP Language Attribution
+
+| Emotion | Hindi Ratio | English Ratio |
+|---------|-------------|---------------|
+| Anger | **0.527** | 0.256 |
+| Joy | 0.356 | **0.397** |
+| Sadness | 0.389 | 0.368 |
+| Trust | 0.401 | 0.364 |
+
+---
+
+## Dataset
+
+- **Base:** SemEval-2020 Task 9 Hinglish dataset (15,480 tweets with gold CoNLL language tags)
+- **Custom split:** 85/15 stratified (13,158 train / 2,322 dev, zero overlap)
+- **Emotion labels:** Silver-standard GPT-4o-mini annotation → 5,980 tweets, 4 classes
+- **Validation:** Cohen's κ = 0.667 (200 manually labeled tweets)
+
+| Emotion | Train | Dev |
+|---------|-------|-----|
+| Anger | 2,375 | 419 |
+| Joy | 1,990 | 351 |
+| Sadness | 427 | 75 |
+| Trust | 291 | 52 |
+
+---
+
+## Project Structure
+hinglish-sentiment-analysis/
+
+├── data/
+
+│   ├── train_custom.csv          # Clean 85/15 train split
+
+│   ├── dev_custom.csv            # Clean 85/15 dev split
+
+│   ├── emotion_train_final.csv   # Emotion train set (5,083 tweets)
+
+│   ├── emotion_dev_final.csv     # Emotion dev set (897 tweets)
+
+│   └── emotion_merged.csv        # Full emotion dataset (5,980 tweets)
+
+├── notebooks/
+
+│   ├── 01_EDA.ipynb              # Exploratory data analysis
+
+│   ├── 02_Baseline.ipynb         # TF-IDF + LR baseline
+
+│   ├── 03_mBERTv2.ipynb          # mBERT sentiment fine-tuning
+
+│   ├── 04_XlmRv2_and_MuRilv2.ipynb  # XLM-R + MuRIL sentiment
+
+│   ├── 06_emotion_relabeling.ipynb   # GPT-4o-mini emotion labeling
+
+│   ├── 07_emotion_label_train.ipynb  # Train set emotion labeling
+
+│   ├── 08_emotion_xlmr.ipynb     # XLM-R emotion fine-tuning
+
+│   ├── 09_emotion_MuRIL.ipynb    # MuRIL emotion fine-tuning
+
+│   ├── 10_ablation_muril.ipynb   # Dataset size ablation
+
+│   └── 11_shap_analysis.ipynb    # SHAP token attribution
+
+├── results/
+
+│   ├── shap_attribution_figure3.png  # Figure 3: attribution bar chart
+
+│   ├── shap_attribution_ratios.csv   # Full attribution results
+
+│   └── muril_ablation_curve.png      # Figure 2: ablation curve
+
+├── demo/
+
+│   ├── app.py                    # Gradio demo app
+
+│   └── requirements.txt
 
 └── README.md
+
+---
 
 ## Setup
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/HarshAggarwal524/hinglish-sentiment-analysis
+cd hinglish-sentiment-analysis
+pip install transformers torch shap gradio pandas scikit-learn
 ```
+
+### Run demo locally
+
+```bash
+cd demo
+pip install -r requirements.txt
+python app.py
+```
+
+### Load model
+
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
+
+tokenizer = AutoTokenizer.from_pretrained("Gek524/hinglish-emotion-xlmr")
+model = AutoModelForSequenceClassification.from_pretrained("Gek524/hinglish-emotion-xlmr")
+model.eval()
+
+text = "Yaar yeh bahut bura hua, I can't believe this"
+inputs = tokenizer(text, return_tensors="pt")
+with torch.no_grad():
+    probs = torch.nn.functional.softmax(model(**inputs).logits, dim=-1)
+
+labels = ['anger', 'joy', 'sadness', 'trust']
+print({labels[i]: round(float(probs[0][i]), 3) for i in range(4)})
+```
+
+---
 
 ## Citation
 
-@inproceedings{patwa-etal-2020-sentimix,
+If you use this work, please cite:
 
-title     = {SentiMix 2020: Hinglish Sentiment Analysis},
-
-author    = {Patwa, Parth and others},
-
-booktitle = {Proceedings of SemEval-2020},
-
-year      = {2020}
-
+```bibtex
+@misc{aggarwal2026hinglish,
+  title={Which Language Drives Emotion? Explainable Multilingual Models for Hinglish Emotion Detection},
+  author={Harsh Aggarwal},
+  year={2026},
+  eprint={YOUR_ARXIV_ID},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL}
 }
+```
+
+---
+
+## Model
+
+The fine-tuned XLM-RoBERTa model is available on HuggingFace Hub:
+👉 [Gek524/hinglish-emotion-xlmr](https://huggingface.co/Gek524/hinglish-emotion-xlmr)
+
+---
+
+## Author
+
+**Harsh Aggarwal**
+Guru Gobind Singh Indraprastha University, New Delhi
+harshaggarwalofficial1@gmail.com
